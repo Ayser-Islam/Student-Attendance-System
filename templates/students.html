@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/students" class="active">Students</a>
+            <a href="/attendance">Mark Attendance</a>
+            <a href="/records">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <h1>Student Management</h1>
+            <p>Add, search and manage student information.</p>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="form-card">
+            <h2>Add New Student</h2>
+
+            <form method="POST" action="/students/add">
+                <label>Student Name</label>
+                <input type="text" name="name" required>
+
+                <label>Roll Number</label>
+                <input type="text" name="roll_number" required>
+
+                <label>Course</label>
+                <input type="text" name="course" required>
+
+                <label>Semester</label>
+                <input type="number" name="semester" min="1" required>
+
+                <button type="submit">Add Student</button>
+            </form>
+        </section>
+
+        <section class="form-card records-card" style="margin-top: 25px;">
+            <h2>Student Directory</h2>
+
+            <form method="GET" action="/students" class="filter-form">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search by name or roll number"
+                    value="{{ search }}"
+                >
+                <button type="submit">Search</button>
+                <a href="/students" class="clear-filter">Clear</a>
+            </form>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Course</th>
+                            <th>Semester</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student[1] }}</td>
+                            <td>{{ student[2] }}</td>
+                            <td>{{ student[3] }}</td>
+                            <td>{{ student[4] }}</td>
+                            <td>
+                                <a class="edit-link"
+                                   href="{{ url_for('edit_student', roll_number=student[2]) }}">
+                                    Edit
+                                </a>
+
+                                <form method="POST"
+                                      action="{{ url_for('delete_student', roll_number=student[2]) }}"
+                                      style="display:inline;">
+                                    <button type="submit"
+                                            class="delete-button"
+                                            onclick="return confirm('Delete this student?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty-records">
+                                No students found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

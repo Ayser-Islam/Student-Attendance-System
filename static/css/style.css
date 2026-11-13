@@ -1,0 +1,405 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6fb;
+    color: #20243a;
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.sidebar {
+    width: 250px;
+    background: #20243a;
+    color: white;
+    padding: 30px 20px;
+    min-height: 100vh;
+}
+
+.sidebar h2 {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.sidebar-subtitle {
+    color: #aeb5cc;
+    font-size: 13px;
+    margin-bottom: 40px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar nav a {
+    color: #cbd0e0;
+    text-decoration: none;
+    padding: 13px 15px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: #5865d8;
+    color: white;
+}
+
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #777f95;
+}
+
+
+.welcome-card {
+    background: linear-gradient(120deg, #5865d8, #7885ed);
+    color: white;
+    padding: 35px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(40, 50, 120, 0.12);
+}
+
+.welcome-card h2 {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.welcome-card p {
+    color: #e7e9ff;
+    line-height: 1.6;
+}
+
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e9ebf2;
+    box-shadow: 0 4px 12px rgba(30, 40, 80, 0.04);
+}
+
+.dashboard-card h3 {
+    margin-bottom: 12px;
+    color: #303958;
+}
+
+.dashboard-card p {
+    color: #858ca0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+@media (max-width: 850px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    .main-content {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+    .sidebar-subtitle {
+        margin-bottom: 20px;
+    }
+}
+
+/* Attendance form */
+
+.form-card {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    max-width: 650px;
+    border: 1px solid #e9ebf2;
+    box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
+}
+
+.form-card h2 {
+    margin-bottom: 25px;
+    color: #303958;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-card label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #dfe2ec;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    color: #303958;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: #5865d8;
+    box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+}
+
+.form-card button {
+    margin-top: 20px;
+    padding: 14px;
+    background: #5865d8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-card button:hover {
+    background: #4552c5;
+}
+
+.message {
+    padding: 13px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.message.success {
+    background: #e5f6eb;
+    color: #21683b;
+}
+
+.message.error {
+    background: #fdeaea;
+    color: #a52d2d;
+}
+
+/* Attendance form */
+
+.form-card {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    max-width: 650px;
+    border: 1px solid #e9ebf2;
+    box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
+}
+
+.form-card h2 {
+    margin-bottom: 25px;
+    color: #303958;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-card label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #dfe2ec;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    color: #303958;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: #5865d8;
+    box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+}
+
+.form-card button {
+    margin-top: 20px;
+    padding: 14px;
+    background: #5865d8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-card button:hover {
+    background: #4552c5;
+}
+
+.message {
+    padding: 13px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.message.success {
+    background: #e5f6eb;
+    color: #21683b;
+}
+
+.message.error {
+    background: #fdeaea;
+    color: #a52d2d;
+}
+
+/* Attendance records table */
+
+.records-card {
+    max-width: 1100px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.filter-form label {
+    font-weight: 600;
+}
+
+.filter-form input {
+    padding: 10px;
+    border: 1px solid #dfe2ec;
+    border-radius: 8px;
+}
+
+.filter-form button {
+    margin: 0;
+    padding: 10px 20px;
+}
+
+.clear-filter,
+.edit-link {
+    color: #5865d8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 15px;
+    border-bottom: 1px solid #edf0f5;
+    white-space: nowrap;
+}
+
+th {
+    color: #69718a;
+    font-size: 13px;
+    background: #f8f9fc;
+}
+
+td {
+    font-size: 14px;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.present {
+    background: #e5f6eb;
+    color: #21683b;
+}
+
+.status.absent {
+    background: #fdeaea;
+    color: #a52d2d;
+}
+
+.status.late {
+    background: #fff2d9;
+    color: #93600c;
+}
+
+.empty-records {
+    text-align: center;
+    color: #858ca0;
+    padding: 30px;
+}
+
+
+.delete-button {
+    background: #fdeaea;
+    color: #a52d2d;
+    border: none;
+    padding: 7px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-button:hover {
+    background: #f8d5d5;
+}

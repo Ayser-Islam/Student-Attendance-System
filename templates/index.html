@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+
+        <nav>
+            <a href="/" class="active">Dashboard</a>
+            <a href="#">Students</a>
+            <a href="#">Mark Attendance</a>
+            <a href="#">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome to the Student Attendance Management System.</p>
+            </div>
+        </header>
+
+        <section class="welcome-card">
+            <h2>Manage Attendance Smarter</h2>
+            <p>Keep track of students, record daily attendance and manage attendance records in one place.</p>
+        </section>
+
+        <section class="dashboard-cards">
+            <div class="dashboard-card">
+                <h3>Students</h3>
+                <p>Manage student information</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Mark Attendance</h3>
+                <p>Record daily student attendance</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Attendance Records</h3>
+                <p>View and update attendance</p>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
