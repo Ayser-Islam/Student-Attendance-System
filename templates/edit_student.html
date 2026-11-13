@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/students" class="active">Students</a>
+            <a href="/attendance">Mark Attendance</a>
+            <a href="/records">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <h1>Edit Student</h1>
+            <p>Update student information.</p>
+        </header>
+
+        <section class="form-card">
+            <h2>Student Details</h2>
+
+            <form method="POST">
+                <label for="name">Student Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ student[0] }}"
+                    required
+                >
+
+                <label for="roll_number">Roll Number</label>
+                <input
+                    type="text"
+                    id="roll_number"
+                    value="{{ student[1] }}"
+                    disabled
+                >
+
+                <label for="course">Course</label>
+                <input
+                    type="text"
+                    id="course"
+                    name="course"
+                    value="{{ student[2] }}"
+                    required
+                >
+
+                <label for="semester">Semester</label>
+                <input
+                    type="number"
+                    id="semester"
+                    name="semester"
+                    value="{{ student[3] }}"
+                    min="1"
+                    required
+                >
+
+                <button type="submit">Save Changes</button>
+                <a href="/students" class="clear-filter">Cancel</a>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
