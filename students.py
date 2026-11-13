@@ -1,116 +1,142 @@
 from database import get_connection
+import sqlite3
 
-def add_student():
-    print("\n--- Add New Student ---")
-    name = input("Enter student name: ")
-    roll_number = input("Enter roll number: ")
-    course = input("Enter course: ")
+def add_student_record(name, roll_number, course, semester):
+    name = name.strip()
+    roll_number = roll_number.strip()
+    course = course.strip()
+    if not name or not roll_number or not course:
+        return False, "All fields are required."
     try:
-        semester = int(input("Enter semester: "))
-        if not name.strip() or not roll_number.strip() or not course.strip():
-            print("All fields are required.")
-            return
+        semester = int(semester)
         if semester < 1:
-            print("Semester must be at least 1.")
-            return
-        conn = get_connection()
+            return False, "Semester must be at least 1."
+    except (ValueError, TypeError):
+        return False, "Semester must be a valid number."
+    conn = get_connection()
+    try:
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO students (name, roll_number, course, semester)
             VALUES (?, ?, ?, ?)
         """, (name, roll_number, course, semester))
         conn.commit()
-        print("Student added successfully!")
-    except ValueError:
-        print("Semester must be a valid number.")
-    except Exception as e:
-        print("Error:", e)
+        return True, "Student added successfully!"
+    except sqlite3.IntegrityError:
+        return False, "This roll number already exists."
     finally:
-        if 'conn' in locals():
-            conn.close()
-
-
-def view_students():
-    print("\n--- Student Records ---")
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
-    if not students:
-        print("No students found.")
-    else:
-        for student in students:
-            print(student)
-    conn.close()
-
-
-def search_student():
-    roll_number = input("Enter roll number to search: ")
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT * FROM students WHERE roll_number = ?",
-        (roll_number,)
-    )
-    student = cursor.fetchone()
-    if student:
-        print("Student found:", student)
-    else:
-        print("Student not found.")
-    conn.close()
-
-
-def delete_student():
-    roll_number = input("Enter roll number to delete: ")
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "DELETE FROM students WHERE roll_number = ?",
-        (roll_number,)
-    )
-    conn.commit()
-    if cursor.rowcount > 0:
-        print("Student deleted successfully!")
-    else:
-        print("Student not found.")
-    conn.close()
-
-
-def update_student():
-    print("\n--- Update Student Details ---")
-    roll_number = input("Enter roll number of student: ")
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT * FROM students WHERE roll_number = ?",
-        (roll_number,)
-    )
-    student = cursor.fetchone()
-    if not student:
-        print("Student not found.")
         conn.close()
-        return
-    print("\nCurrent Details:")
-    print("Name:", student[1])
-    print("Roll Number:", student[2])
-    print("Course:", student[3])
-    print("Semester:", student[4])
-    name = input("Enter new name: ")
-    course = input("Enter new course: ")
+
+def get_all_students():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT student_id, name, roll_number, course, semester
+        FROM students
+        ORDER BY name
+    """)
+    students = cursor.fetchall()
+    conn.close()
+    return students
+
+def search_student_record(query):
+    query = query.strip()
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT student_id, name, roll_number, course, semester
+        FROM students
+        WHERE name LIKE ? OR roll_number LIKE ?
+        ORDER BY name
+    """, (f"%{query}%", f"%{query}%"))
+    students = cursor.fetchall()
+    conn.close()
+    return students
+
+def delete_student_record(roll_number):
+    conn = get_connection()
     try:
-        semester = int(input("Enter new semester: "))
-        if not name.strip() or not course.strip() or semester < 1:
-            print("Invalid details. All fields are required.")
-            conn.close()
-            return
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM students WHERE roll_number = ?",
+            (roll_number.strip(),)
+        )
+        if cursor.rowcount == 0:
+            return False, "Student not found."
+        conn.commit()
+        return True, "Student deleted successfully!"
+    except sqlite3.IntegrityError:
+        return False, "Cannot delete student because attendance records are linked to this student."
+    finally:
+        conn.close()
+
+def update_student_record(roll_number, name, course, semester):
+    name = name.strip()
+    course = course.strip()
+    if not name or not course:
+        return False, "All fields are required."
+    try:
+        semester = int(semester)
+        if semester < 1:
+            return False, "Semester must be at least 1."
+    except (ValueError, TypeError):
+        return False, "Semester must be a valid number."
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
         cursor.execute("""
             UPDATE students
             SET name = ?, course = ?, semester = ?
             WHERE roll_number = ?
-        """, (name, course, semester, roll_number))
+        """, (name, course, semester, roll_number.strip()))
+        if cursor.rowcount == 0:
+            return False, "Student not found."
         conn.commit()
-        print("Student updated successfully!")
-    except ValueError:
-        print("Semester must be a valid number.")
+        return True, "Student updated successfully!"
     finally:
         conn.close()
+
+def add_student():
+    print("\n--- Add New Student ---")
+    name = input("Enter student name: ")
+    roll_number = input("Enter roll number: ")
+    course = input("Enter course: ")
+    semester = input("Enter semester: ")
+    success, message = add_student_record(
+        name, roll_number, course, semester
+    )
+    print(message)
+
+def view_students():
+    print("\n--- Student Records ---")
+    students = get_all_students()
+    if not students:
+        print("No students found.")
+        return
+    for student in students:
+        print(student)
+
+def search_student():
+    roll_number = input("Enter roll number to search: ")
+    students = search_student_record(roll_number)
+    if students:
+        for student in students:
+            print("Student found:", student)
+    else:
+        print("Student not found.")
+
+def delete_student():
+    roll_number = input("Enter roll number to delete: ")
+    success, message = delete_student_record(roll_number)
+    print(message)
+
+def update_student():
+    print("\n--- Update Student Details ---")
+    roll_number = input("Enter roll number of student: ")
+    name = input("Enter new name: ")
+    course = input("Enter new course: ")
+    semester = input("Enter new semester: ")
+    success, message = update_student_record(
+        roll_number, name, course, semester
+    )
+    print(message)
