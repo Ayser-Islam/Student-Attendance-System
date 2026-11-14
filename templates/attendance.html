@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="#">Students</a>
+            <a href="/attendance" class="active">Mark Attendance</a>
+            <a href="#">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <h1>Mark Attendance</h1>
+            <p>Record daily attendance for your students.</p>
+        </header>
+
+        <section class="welcome-card">
+            <h2>Daily Attendance</h2>
+            <p>Select a student, choose a date and record their attendance.</p>
+        </section>
+
+        <section class="form-card">
+            <h2>Attendance Details</h2>
+
+            {% if message %}
+                <div class="message {{ 'success' if success else 'error' }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="/attendance">
+
+                <label for="roll_number">Select Student</label>
+                <select id="roll_number" name="roll_number" required>
+                    <option value="">Choose a student</option>
+                    {% for student in students %}
+                        <option value="{{ student[0] }}">
+                            {{ student[1] }} — Roll No: {{ student[0] }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <label for="attendance_date">Attendance Date</label>
+                <input
+                    type="date"
+                    id="attendance_date"
+                    name="attendance_date"
+                    value="{{ today }}"
+                    required
+                >
+
+                <label for="status">Attendance Status</label>
+                <select id="status" name="status" required>
+                    <option value="">Choose status</option>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                    <option value="Late">Late</option>
+                </select>
+
+                <button type="submit">Save Attendance</button>
+
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Attendance | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="#">Students</a>
+            <a href="/attendance">Mark Attendance</a>
+            <a href="/records" class="active">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <h1>Edit Attendance</h1>
+            <p>Correct an existing attendance record.</p>
+        </header>
+
+        <section class="form-card">
+            <h2>Record Details</h2>
+
+            <p><strong>Student:</strong> {{ record[1] }}</p>
+            <p><strong>Roll Number:</strong> {{ record[2] }}</p>
+            <p><strong>Date:</strong> {{ record[3] }}</p>
+
+            <form method="POST">
+                <label for="status">Attendance Status</label>
+
+                <select name="status" id="status" required>
+                    <option value="Present"
+                        {% if record[4] == "Present" %}selected{% endif %}>
+                        Present
+                    </option>
+
+                    <option value="Absent"
+                        {% if record[4] == "Absent" %}selected{% endif %}>
+                        Absent
+                    </option>
+
+                    <option value="Late"
+                        {% if record[4] == "Late" %}selected{% endif %}>
+                        Late
+                    </option>
+                </select>
+
+                <button type="submit">Update Attendance</button>
+                <a href="/records" class="clear-filter">Cancel</a>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records | AttendEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>AttendEase</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="#">Students</a>
+            <a href="/attendance">Mark Attendance</a>
+            <a href="/records" class="active">Attendance Records</a>
+            <a href="#">Reports</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <header>
+            <h1>Attendance Records</h1>
+            <p>View and manage student attendance history.</p>
+        </header>
+
+        <section class="form-card records-card">
+            <h2>All Records</h2>
+
+            <form method="GET" action="/records" class="filter-form">
+                <label for="filter_date">Filter by date</label>
+                <input
+                    type="date"
+                    id="filter_date"
+                    name="date"
+                    value="{{ selected_date }}"
+                >
+                <button type="submit">Filter</button>
+                <a href="/records" class="clear-filter">Clear</a>
+            </form>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>{{ record[1] }}</td>
+                            <td>{{ record[2] }}</td>
+                            <td>{{ record[3] }}</td>
+                            <td>
+                                <span class="status {{ record[4]|lower }}">
+                                    {{ record[4] }}
+                                </span>
+                            </td>
+                            <td>
+                                <a
+                                    class="edit-link"
+                                    href="{{ url_for('edit_attendance', attendance_id=record[0]) }}"
+                                >
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty-records">
+                                No attendance records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
