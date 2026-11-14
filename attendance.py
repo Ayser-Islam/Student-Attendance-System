@@ -51,11 +51,18 @@ def get_attendance_by_date(selected_date):
         date.fromisoformat(selected_date)
     except ValueError:
         return []
+
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("""
         SELECT a.attendance_id, s.name, s.roll_number, a.date, a.status
+        FROM attendance a
+        JOIN students s ON a.student_id = s.student_id
+        WHERE a.date = ?
+        ORDER BY a.date DESC
     """, (selected_date,))
+
     records = cursor.fetchall()
     conn.close()
     return records
@@ -161,8 +168,8 @@ def view_attendance_by_date():
 
     for record in records:
         print(
-            f"Name: {record[0]} | Roll: {record[1]} | "
-            f"Date: {record[2]} | Status: {record[3]}"
+            f"Name: {record[1]} | Roll: {record[2]} | "
+            f"Date: {record[3]} | Status: {record[4]}"
         )
 
 
