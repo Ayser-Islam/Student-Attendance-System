@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Attendance Summary</title>
+</head>
+<body>
+
+<h1>Student Attendance Summary</h1>
+
+<h3>Name: {{ student.name }}</h3>
+<h3>Roll Number: {{ student.roll_number }}</h3>
+<h3>Course: {{ student.course }}</h3>
+<h3>Semester: {{ student.semester }}</h3>
+
+<hr>
+
+<h2>Attendance Statistics</h2>
+
+<p>Total Classes: {{ student.total }}</p>
+<p>Present: {{ student.present }}</p>
+<p>Absent: {{ student.absent }}</p>
+<p>Late: {{ student.late }}</p>
+
+<h2>Attendance Percentage: {{ student.percentage }}%</h2>
+
+<a href="{{ url_for('analytics_page') }}">Back to Analytics</a>
+
+</body>
+</html>
