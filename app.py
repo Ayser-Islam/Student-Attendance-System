@@ -2,6 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import date
 from database import get_connection
 
+import os
+from flask import session
+from auth import (
+    init_auth_table,
+    authenticate_user,
+    login_required
+)
+
 from attendance import (
     mark_attendance_record,
     get_all_attendance,
@@ -149,6 +157,94 @@ def delete_student(roll_number):
     success, message = delete_student_record(roll_number)
     flash(message, "success" if success else "error")
     return redirect(url_for("students_page"))
+
+
+
+# ==========================================
+# Add login and logout routes
+# ==========================================
+
+app = Flask(__name__)
+
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "change-this-secret-key-for-local-development"
+)
+
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+init_auth_table()
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if "user_id" in session:
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+
+        user_id = request.form.get("user_id", "").strip()
+        password = request.form.get("password", "")
+
+        success, authenticated_id = authenticate_user(
+            user_id, password
+        )
+
+        if success:
+            session.clear()
+            session["user_id"] = authenticated_id
+
+            flash("Login successful!", "success")
+            return redirect(url_for("home"))
+
+        flash("Invalid login ID or password.", "error")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+
+    session.clear()
+
+    flash("You have been logged out.", "success")
+
+    return redirect(url_for("login"))
+
+@app.route("/")
+@login_required
+def home():
+    return render_template("index.html")
+
+@app.route("/attendance", methods=["GET", "POST"])
+@login_required
+def attendance():
+
+@app.route("/edit-attendance/<int:attendance_id>", methods=["GET", "POST"])
+@login_required
+def edit_attendance(attendance_id):
+
+
+
+@app.route("/students")
+@login_required
+def students_page():
+
+@app.route("/students/add", methods=["POST"])
+@login_required
+def add_student():
+
+@app.route("/students/edit/<roll_number>", methods=["GET", "POST"])
+@login_required
+def edit_student(roll_number):
+
+@app.route("/students/delete/<roll_number>", methods=["POST"])
+@login_required
+def delete_student(roll_number):
+
 
 if __name__ == "__main__":
     app.run(debug=True)
