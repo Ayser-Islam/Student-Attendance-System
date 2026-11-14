@@ -5,24 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Attendance System</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
     <div class="sidebar">
+
         <h2>AttendEase</h2>
         <p class="sidebar-subtitle">Student Management</p>
 
         <nav>
-            <a href="/" class="active">Dashboard</a>
-            <a href="#">Students</a>
-            <a href="#">Mark Attendance</a>
-            <a href="#">Attendance Records</a>
-            <a href="#">Reports</a>
+            <a href="{{ url_for('home') }}" class="active">Dashboard</a>
+
+            <a href="{{ url_for('students_page') }}">Students</a>
+
+            <a href="{{ url_for('attendance') }}">Mark Attendance</a>
+
+            <a href="{{ url_for('records') }}">Attendance Records</a>
+
+            <a href="{{ url_for('analytics_page') }}">Analytics</a>
+
+            <a href="{{ url_for('defaulters_page') }}">Defaulter List</a>
+
+            <a href="{{ url_for('export_attendance') }}">Download CSV Report</a>
         </nav>
+
+        <div class="sidebar-footer">
+            <p>Logged in as: {{ session.get('user_id') }}</p>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
     </div>
 
+
     <main class="main-content">
+
         <header>
             <div>
                 <h1>Dashboard</h1>
@@ -30,27 +49,116 @@
             </div>
         </header>
 
+
         <section class="welcome-card">
             <h2>Manage Attendance Smarter</h2>
-            <p>Keep track of students, record daily attendance and manage attendance records in one place.</p>
+
+            <p>
+                Keep track of students, record daily attendance,
+                analyze attendance performance and manage records
+                in one place.
+            </p>
         </section>
+
 
         <section class="dashboard-cards">
+
+            <!-- Student Management -->
             <div class="dashboard-card">
                 <h3>Students</h3>
-                <p>Manage student information</p>
+
+                <p>
+                    Manage student information, add, update,
+                    search and delete students.
+                </p>
+
+                <a href="{{ url_for('students_page') }}">
+                    Manage Students
+                </a>
             </div>
 
+
+            <!-- Mark Attendance -->
             <div class="dashboard-card">
                 <h3>Mark Attendance</h3>
-                <p>Record daily student attendance</p>
+
+                <p>
+                    Record daily student attendance with
+                    Present, Absent and Late status.
+                </p>
+
+                <a href="{{ url_for('attendance') }}">
+                    Mark Attendance
+                </a>
             </div>
 
+
+            <!-- Attendance Records -->
             <div class="dashboard-card">
                 <h3>Attendance Records</h3>
-                <p>View and update attendance</p>
+
+                <p>
+                    View attendance records by date
+                    and update existing records.
+                </p>
+
+                <a href="{{ url_for('records') }}">
+                    View Records
+                </a>
             </div>
+
+
+            <!-- Attendance Analytics -->
+            <div class="dashboard-card">
+                <h3>Attendance Analytics</h3>
+
+                <p>
+                    View student attendance percentages,
+                    present counts and absent counts.
+                </p>
+
+                <a href="{{ url_for('analytics_page') }}">
+                    View Analytics
+                </a>
+            </div>
+
+
+            <!-- Defaulter List -->
+            <div class="dashboard-card">
+                <h3>Defaulter List</h3>
+
+                <p>
+                    Find students whose attendance
+                    is below the selected percentage.
+                </p>
+
+                <a href="{{ url_for('defaulters_page') }}">
+                    View Defaulters
+                </a>
+            </div>
+
+
+            <!-- CSV Report -->
+            <div class="dashboard-card">
+                <h3>Attendance Report</h3>
+
+                <p>
+                    Download complete attendance records
+                    in CSV format.
+                </p>
+
+                <a href="{{ url_for('export_attendance') }}">
+                    Download Report
+                </a>
+            </div>
+
         </section>
+
+
+        <footer>
+            <p>AttendEase | Student Attendance Management System</p>
+        </footer>
+
     </main>
 
 </body>
