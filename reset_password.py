@@ -6,10 +6,18 @@ import getpass
 
 
 def reset_password():
-    user_id = input("Enter Login ID (1, 2, or 3): ").strip()
+    print("\n===== Reset Password =====")
+    print("1. Teacher")
+    print("2. Student")
 
-    if user_id not in ["1", "2", "3"]:
-        print("Invalid Login ID!")
+    user_type = input("Select account type (1 or 2): ").strip()
+
+    if user_type == "1":
+        user_id = "teacher"
+    elif user_type == "2":
+        user_id = "student"
+    else:
+        print("Invalid account type!")
         return
 
     password = getpass.getpass("Enter new password: ")
@@ -40,7 +48,7 @@ def reset_password():
 
         conn.commit()
 
-        print(f"Account {user_id} created or password reset successfully!")
+        print(f"{user_type_name(user_id)} account password reset successfully!")
 
     except Exception as e:
         conn.rollback()
@@ -48,6 +56,10 @@ def reset_password():
 
     finally:
         conn.close()
+
+
+def user_type_name(user_id):
+    return "Teacher" if user_id == "teacher" else "Student"
 
 
 if __name__ == "__main__":
