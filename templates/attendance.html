@@ -1,29 +1,7 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Attendance | AttendEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-
-    <div class="sidebar">
-        <h2>AttendEase</h2>
-        <p class="sidebar-subtitle">Student Management</p>
-
-        <nav>
-            <a href="/">Dashboard</a>
-            <a href="#">Students</a>
-            <a href="/attendance" class="active">Mark Attendance</a>
-            <a href="#">Attendance Records</a>
-            <a href="#">Reports</a>
-        </nav>
-    </div>
-
-    <main class="main-content">
-        <header>
+{% extends 'base.html' %}
+{% block title %}Mark Attendance | stuAtt{% endblock %}
+{% block content %}
+<header>
             <h1>Mark Attendance</h1>
             <p>Record daily attendance for your students.</p>
         </header>
@@ -75,7 +53,4 @@
 
             </form>
         </section>
-    </main>
-
-</body>
-</html>
+{% endblock %}

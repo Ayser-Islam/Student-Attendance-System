@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}stuAtt{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="sidebar">
+        <h2>stuAtt</h2>
+        <p class="sidebar-subtitle">Student Management</p>
+        <nav>
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Dashboard</a>
+            <a href="/students" class="{% if request.path.startswith('/students') %}active{% endif %}">Students</a>
+            <a href="/attendance" class="{% if request.path == '/attendance' %}active{% endif %}">Mark Attendance</a>
+            <a href="/records" class="{% if request.path.startswith('/records') %}active{% endif %}">Attendance Records</a>
+        </nav>
+    </div>
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
