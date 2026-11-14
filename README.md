@@ -1,2 +1,4 @@
 # Student-Attendance-System
-A Python-based Student Attendance Management System using SQLite. Made by Ayser islam and Shivam Chaudhary
+A collaborative Student Attendance Management System developed using Git, GitHub , Markdown, python and Sqlite.
+Made by Ayser islam and Shivam Chaudhary
+
