@@ -1,237 +1,62 @@
 
-{% extends "base.html" %}
 
-{% block title %}Attendance Defaulters - stuAtt{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Defaulters</title>
+</head>
+<body>
 
-{% block head %}
-<style>
-    .defaulters-card {
-        background: white;
-        padding: 25px;
-        border-radius: 14px;
-        border: 1px solid #e9ebf2;
-        box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
-        margin-top: 20px;
-    }
+<h1>Attendance Defaulter List</h1>
 
-    .defaulters-card h2 {
-        color: #303958;
-        margin-bottom: 20px;
-    }
+<form method="GET">
+    <label>Attendance Threshold (%):</label>
 
-    .threshold-form {
-        display: flex;
-        align-items: end;
-        gap: 15px;
-        flex-wrap: wrap;
-        margin-bottom: 25px;
-    }
+    <input
+        type="number"
+        name="threshold"
+        value="{{ threshold }}"
+        min="0"
+        max="100"
+        step="0.1"
+    >
 
-    .threshold-form .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-        min-width: 200px;
-    }
+    <button type="submit">Search</button>
+</form>
 
-    .threshold-form label {
-        font-size: 14px;
-        font-weight: 600;
-        color: #303958;
-    }
+<h3>Students below {{ threshold }}% attendance</h3>
 
-    .threshold-form input {
-        padding: 12px;
-        border: 1px solid #dfe2ec;
-        border-radius: 8px;
-        font-size: 14px;
-    }
+<table border="1" cellpadding="10">
 
-    .threshold-form input:focus {
-        outline: none;
-        border-color: #5865d8;
-    }
+    <tr>
+        <th>Name</th>
+        <th>Roll Number</th>
+        <th>Total Classes</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Attendance %</th>
+    </tr>
 
-    .search-button {
-        padding: 12px 22px;
-        background: #5865d8;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-    }
+    {% for student in defaulters %}
+    <tr>
+        <td>{{ student.name }}</td>
+        <td>{{ student.roll_number }}</td>
+        <td>{{ student.total }}</td>
+        <td>{{ student.present }}</td>
+        <td>{{ student.absent }}</td>
+        <td>{{ student.percentage }}%</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6">No defaulters found!</td>
+    </tr>
+    {% endfor %}
 
-    .search-button:hover {
-        background: #4552c5;
-    }
+</table>
 
-    .defaulters-subtitle {
-        color: #858ca0;
-        margin-bottom: 18px;
-        font-size: 14px;
-    }
+<br>
 
-    .table-container {
-        width: 100%;
-        overflow-x: auto;
-    }
+<a href="{{ url_for('analytics_page') }}">Back to Analytics</a>
 
-    .table-container table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 650px;
-    }
-
-    .table-container th,
-    .table-container td {
-        padding: 14px 12px;
-        text-align: left;
-        border-bottom: 1px solid #edf0f5;
-        font-size: 14px;
-    }
-
-    .table-container th {
-        background: #f5f6fb;
-        color: #303958;
-        font-weight: 600;
-    }
-
-    .table-container tr:hover {
-        background: #fafbff;
-    }
-
-    .percentage {
-        color: #dc2626;
-        font-weight: 700;
-    }
-
-    .empty-records {
-        text-align: center !important;
-        color: #858ca0;
-        padding: 25px !important;
-    }
-
-    .back-link {
-        display: inline-block;
-        margin-top: 22px;
-        padding: 11px 18px;
-        background: #eef0f7;
-        color: #303958;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .back-link:hover {
-        background: #e1e4ef;
-    }
-
-    @media (max-width: 600px) {
-        .threshold-form {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .threshold-form .form-group {
-            width: 100%;
-        }
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-
-<header>
-    <div>
-        <h1>Attendance Defaulter List</h1>
-        <p>Identify students whose attendance is below the required percentage.</p>
-    </div>
-</header>
-
-<section class="defaulters-card">
-
-    <h2>Attendance Threshold</h2>
-
-    <form method="GET" class="threshold-form">
-
-        <div class="form-group">
-            <label for="threshold">Attendance Threshold (%)</label>
-
-            <input
-                type="number"
-                id="threshold"
-                name="threshold"
-                value="{{ threshold }}"
-                min="0"
-                max="100"
-                step="0.1"
-                required
-            >
-        </div>
-
-        <button type="submit" class="search-button">
-            Search
-        </button>
-
-    </form>
-
-    <h2>Students Below {{ threshold }}% Attendance</h2>
-
-    <p class="defaulters-subtitle">
-        Students with attendance percentages below the selected threshold.
-    </p>
-
-    <div class="table-container">
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Roll Number</th>
-                    <th>Total Classes</th>
-                    <th>Present</th>
-                    <th>Absent</th>
-                    <th>Attendance %</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for student in defaulters %}
-
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.roll_number }}</td>
-                    <td>{{ student.total }}</td>
-                    <td>{{ student.present }}</td>
-                    <td>{{ student.absent }}</td>
-                    <td class="percentage">
-                        {{ student.percentage }}%
-                    </td>
-                </tr>
-
-                {% else %}
-
-                <tr>
-                    <td colspan="6" class="empty-records">
-                        No defaulters found!
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-        </table>
-
-    </div>
-
-    <a href="{{ url_for('analytics_page') }}" class="back-link">
-        Back to Analytics
-    </a>
-
-</section>
-
-{% endblock %}
+</body>
+</html>
