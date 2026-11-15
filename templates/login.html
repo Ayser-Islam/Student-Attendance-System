@@ -1,98 +1,168 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - Student Attendance System</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+{% block title %}Login - stuAtt{% endblock %}
 
+{% block head %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        flex: none;
+        width: 100%;
+        max-width: 430px;
+        padding: 0;
+    }
+
+    .login-box {
+        background: white;
+        padding: 35px;
+        width: 100%;
+        border-radius: 15px;
+        border: 1px solid #e9ebf2;
+        box-shadow: 0 8px 25px rgba(30, 40, 80, 0.08);
+    }
+
+    .login-box h2 {
+        text-align: center;
+        color: #20243a;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #858ca0;
+        margin-bottom: 25px;
+    }
+
+    .login-box label {
+        display: block;
+        margin-top: 18px;
+        font-weight: 600;
+        color: #303958;
+        font-size: 14px;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 13px;
+        margin-top: 8px;
+        border: 1px solid #dfe2ec;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .login-box input:focus {
+        outline: none;
+        border-color: #5865d8;
+        box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+    }
+
+    .login-box button {
+        width: 100%;
+        padding: 14px;
+        background: #5865d8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 25px;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .login-box button:hover {
+        background: #4552c5;
+    }
+
+    .login-box .message {
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    .login-box .message.success {
+        background: #e5f6eb;
+        color: #21683b;
+    }
+
+    .login-box .message.error {
+        background: #fdeaea;
+        color: #a52d2d;
+    }
+
+    @media (max-width: 450px) {
         .login-box {
-            background: white;
-            padding: 35px;
-            width: 320px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px #0002;
+            padding: 25px;
         }
+    }
+</style>
+{% endblock %}
 
-        h2 {
-            text-align: center;
-            color: #1e293b;
-        }
+{% block content %}
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-        }
+<div class="login-box">
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 12px;
-        }
+    <h2>stuAtt</h2>
 
-        button:hover {
-            background: #1d4ed8;
-        }
+    <p class="subtitle">
+        Student Management System
+    </p>
 
-        .message {
-            text-align: center;
-            color: red;
-        }
-    </style>
-</head>
+    <p class="subtitle">
+        Login to continue
+    </p>
 
-<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
 
-    <div class="login-box">
+    <form method="POST" action="{{ url_for('login') }}">
 
-        <h2>Student Attendance System</h2>
-        <p style="text-align:center;">Login to continue</p>
+        <label for="user_id">Login ID</label>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <p class="message">{{ message }}</p>
-            {% endfor %}
-        {% endwith %}
+        <input
+            type="text"
+            id="user_id"
+            name="user_id"
+            placeholder="Enter your Login ID"
+            autocomplete="username"
+            required
+        >
 
-        <form method="POST" action="{{ url_for('login') }}">
+        <label for="password">Password</label>
 
-            <input
-                type="text"
-                name="user_id"
-                placeholder="Enter Login ID (1, 2, or 3)"
-                required
-            >
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your Password"
+            autocomplete="current-password"
+            required
+        >
 
-            <input
-                type="password"
-                name="password"
-                placeholder="Enter Password"
-                required
-            >
+        <button type="submit">
+            Login
+        </button>
 
-            <button type="submit">Login</button>
+    </form>
 
-        </form>
+</div>
 
-    </div>
-
-</body>
-</html>
+{% endblock %}

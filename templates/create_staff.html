@@ -1,0 +1,176 @@
+
+{% extends "base.html" %}
+
+{% block title %}Create User Account - stuAtt{% endblock %}
+
+{% block head %}
+<style>
+    .create-user-card {
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        border: 1px solid #e9ebf2;
+        box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
+    }
+
+    .create-user-card h2 {
+        margin-bottom: 10px;
+        color: #303958;
+    }
+
+    .create-user-card .subtitle {
+        color: #858ca0;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+
+    .create-user-card form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .create-user-card label {
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 10px;
+        color: #303958;
+    }
+
+    .create-user-card input,
+    .create-user-card select {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #dfe2ec;
+        border-radius: 8px;
+        font-size: 15px;
+        background: white;
+        color: #303958;
+    }
+
+    .create-user-card input:focus,
+    .create-user-card select:focus {
+        outline: none;
+        border-color: #5865d8;
+        box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+    }
+
+    .info-message {
+        background: #e0f2fe;
+        color: #075985;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 5px 0;
+    }
+
+    .create-button,
+    .back-button {
+        display: block;
+        width: 100%;
+        padding: 13px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .create-button {
+        background: #5865d8;
+        color: white;
+    }
+
+    .create-button:hover {
+        background: #4552c5;
+    }
+
+    .back-button {
+        background: #eef0f7;
+        color: #303958;
+    }
+
+    .back-button:hover {
+        background: #e1e4ef;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<header>
+    <h1>Create User Account</h1>
+    <p>Create Teacher and Student accounts from the Admin Dashboard.</p>
+</header>
+
+<div class="create-user-card">
+
+    <h2>New Account</h2>
+
+    <p class="subtitle">
+        Enter the account details below.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <label for="user_id">Login ID</label>
+
+        <input
+            type="text"
+            id="user_id"
+            name="user_id"
+            placeholder="Enter Login ID"
+            required
+        >
+
+        <p class="info-message">
+            For Student accounts, enter the student's existing Roll Number
+            as the Login ID. The system will automatically link the account
+            to the matching student record.
+        </p>
+
+        <label for="password">Password</label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Minimum 8 characters"
+            minlength="8"
+            required
+        >
+
+        <label for="role">Select Role</label>
+
+        <select id="role" name="role" required>
+            <option value="">Choose Role</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+        </select>
+
+        <button type="submit" class="create-button">
+            Create Account
+        </button>
+
+    </form>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back-button">
+        Back to Admin Dashboard
+    </a>
+
+</div>
+
+{% endblock %}
