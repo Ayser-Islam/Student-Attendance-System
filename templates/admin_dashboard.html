@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .cards, .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 2px 8px #ddd;
+        }
+
+        .card h2 {
+            color: #2563eb;
+        }
+
+        a, button {
+            display: inline-block;
+            padding: 11px 16px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        a:hover, button:hover {
+            opacity: 0.85;
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #e9eef8;
+        }
+
+        .active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .inactive {
+            color: red;
+            font-weight: bold;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .small-button {
+            padding: 7px 10px;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Admin Dashboard</h1>
+
+    <p>Welcome, {{ session.get('user_id') }}</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="cards">
+
+        <div class="card">
+            <p>Total Accounts</p>
+            <h2>{{ users|length }}</h2>
+        </div>
+
+        <div class="card">
+            <p>Teachers</p>
+            <h2>{{ total_teachers }}</h2>
+        </div>
+
+        <div class="card">
+            <p>Students</p>
+            <h2>{{ total_student_accounts }}</h2>
+        </div>
+
+    </div>
+
+    <div class="actions">
+
+        <a href="{{ url_for('create_user') }}">
+            Create Teacher / Student
+        </a>
+
+        <a href="{{ url_for('students_page') }}">
+            Manage Students
+        </a>
+
+        <a href="{{ url_for('attendance') }}">
+            Manage Attendance
+        </a>
+
+        <a href="{{ url_for('analytics_page') }}">
+            Analytics
+        </a>
+
+        <a href="{{ url_for('export_attendance') }}">
+            Export Reports
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+    <h2>All User Accounts</h2>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Login ID</th>
+                    <th>Role</th>
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for user in users %}
+
+                <tr>
+
+                    <td>{{ user[0] }}</td>
+
+                    <td>{{ user[1]|title }}</td>
+
+                    <td>{{ user[4] or '-' }}</td>
+
+                    <td>{{ user[5] or '-' }}</td>
+
+                    <td>
+                        {% if user[3] %}
+                            <span class="active">Active</span>
+                        {% else %}
+                            <span class="inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        {% if user[1] != 'admin' %}
+
+                        <form method="POST"
+                              action="{{ url_for('toggle_user', user_id=user[0]) }}">
+
+                            <button class="small-button" type="submit">
+                                {% if user[3] %}
+                                    Deactivate
+                                {% else %}
+                                    Activate
+                                {% endif %}
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                            Admin
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6" class="empty">
+                        No user accounts found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
