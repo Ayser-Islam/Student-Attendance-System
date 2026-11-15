@@ -7,52 +7,68 @@ from flask import session, redirect, url_for, flash
 
 def init_auth_table():
     conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS auth_users (
-            user_id TEXT PRIMARY KEY,
-            password_hash TEXT NOT NULL,
-            role TEXT NOT NULL DEFAULT 'teacher',
-            student_id INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            is_active INTEGER DEFAULT 1,
-            FOREIGN KEY (student_id) REFERENCES students(student_id)
-        )
-    """)
+    try:
+        cursor = conn.cursor()
 
-    cursor.execute("PRAGMA table_info(auth_users)")
-    columns = [column[1] for column in cursor.fetchall()]
-
-    if "role" not in columns:
         cursor.execute("""
-            ALTER TABLE auth_users
-            ADD COLUMN role TEXT NOT NULL DEFAULT 'teacher'
+            CREATE TABLE IF NOT EXISTS auth_users (
+                user_id TEXT PRIMARY KEY,
+                password_hash TEXT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'teacher',
+                student_id INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                is_active INTEGER DEFAULT 1,
+                FOREIGN KEY (student_id) REFERENCES students(student_id)
+            )
         """)
 
-    if "student_id" not in columns:
+        cursor.execute("PRAGMA table_info(auth_users)")
+        columns = [column[1] for column in cursor.fetchall()]
+
+        if "role" not in columns:
+            cursor.execute("""
+                ALTER TABLE auth_users
+                ADD COLUMN role TEXT NOT NULL DEFAULT 'teacher'
+            """)
+
+        if "student_id" not in columns:
+            cursor.execute("""
+                ALTER TABLE auth_users
+                ADD COLUMN student_id INTEGER
+            """)
+
+        if "created_at" not in columns:
+            cursor.execute("""
+                ALTER TABLE auth_users
+                ADD COLUMN created_at TIMESTAMP
+            """)
+
+        # Populate timestamps for existing accounts.
         cursor.execute("""
-            ALTER TABLE auth_users
-            ADD COLUMN student_id INTEGER
+            UPDATE auth_users
+            SET created_at = CURRENT_TIMESTAMP
+            WHERE created_at IS NULL
         """)
 
-    if "created_at" not in columns:
-        cursor.execute("""
-            ALTER TABLE auth_users
-            ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        """)
+        if "is_active" not in columns:
+            cursor.execute("""
+                ALTER TABLE auth_users
+                ADD COLUMN is_active INTEGER DEFAULT 1
+            """)
 
-    if "is_active" not in columns:
-        cursor.execute("""
-            ALTER TABLE auth_users
-            ADD COLUMN is_active INTEGER DEFAULT 1
-        """)
+        conn.commit()
 
-    conn.commit()
-    conn.close()
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        conn.close()
 
 
 def create_auth_user(user_id, password, role, student_id=None):
+
     if not user_id or not password:
         return False, "User ID and password are required."
 
@@ -74,6 +90,7 @@ def create_auth_user(user_id, password, role, student_id=None):
         cursor = conn.cursor()
 
         if role == "student":
+
             cursor.execute(
                 "SELECT student_id FROM students WHERE student_id = ?",
                 (student_id,)
@@ -94,14 +111,16 @@ def create_auth_user(user_id, password, role, student_id=None):
 
         cursor.execute("""
             INSERT INTO auth_users
-            (user_id, password_hash, role, student_id)
-            VALUES (?, ?, ?, ?)
+            (user_id, password_hash, role, student_id, created_at)
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
         """, (user_id, password_hash, role, student_id))
 
         conn.commit()
+
         return True, "Account created successfully!"
 
     except Exception as e:
+        conn.rollback()
         return False, str(e)
 
     finally:
@@ -109,19 +128,28 @@ def create_auth_user(user_id, password, role, student_id=None):
 
 
 def authenticate_user(user_id, password):
+
     conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT user_id, password_hash, role, student_id, is_active
-        FROM auth_users
-        WHERE user_id = ?
-    """, (user_id,))
+    try:
+        cursor = conn.cursor()
 
-    user = cursor.fetchone()
-    conn.close()
+        cursor.execute("""
+            SELECT user_id, password_hash, role, student_id, is_active
+            FROM auth_users
+            WHERE user_id = ?
+        """, (user_id,))
 
-    if user and user[4] == 1 and check_password_hash(user[1], password):
+        user = cursor.fetchone()
+
+    finally:
+        conn.close()
+
+    if (
+        user
+        and user[4] == 1
+        and check_password_hash(user[1], password)
+    ):
         return True, {
             "user_id": user[0],
             "role": user[2],
@@ -132,8 +160,10 @@ def authenticate_user(user_id, password):
 
 
 def login_required(func):
+
     @wraps(func)
     def wrapper(*args, **kwargs):
+
         if "user_id" not in session:
             flash("Please login first.", "error")
             return redirect(url_for("login"))
@@ -144,15 +174,21 @@ def login_required(func):
 
 
 def role_required(*allowed_roles):
+
     def decorator(func):
+
         @wraps(func)
         def wrapper(*args, **kwargs):
+
             if "user_id" not in session:
                 flash("Please login first.", "error")
                 return redirect(url_for("login"))
 
             if session.get("role") not in allowed_roles:
-                flash("You are not authorized to access this page.", "error")
+                flash(
+                    "You are not authorized to access this page.",
+                    "error"
+                )
                 return redirect(url_for("home"))
 
             return func(*args, **kwargs)

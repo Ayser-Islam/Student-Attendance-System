@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,16 +12,38 @@
     <div class="sidebar">
         <h2>stuAtt</h2>
         <p class="sidebar-subtitle">Student Management</p>
-        <nav>
-            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Dashboard</a>
-            <a href="/students" class="{% if request.path.startswith('/students') %}active{% endif %}">Students</a>
-            <a href="/attendance" class="{% if request.path == '/attendance' %}active{% endif %}">Mark Attendance</a>
-            <a href="/records" class="{% if request.path.startswith('/records') %}active{% endif %}">Attendance Records</a>
+
+        <nav aria-label="Main navigation">
+            <a href="{{ url_for('home') }}"
+               class="{% if request.path == '/' %}active{% endif %}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('students_page') }}"
+               class="{% if request.path.startswith('/students') %}active{% endif %}">
+                Students
+            </a>
+
+            <a href="{{ url_for('attendance') }}"
+               class="{% if request.path == '/attendance' %}active{% endif %}">
+                Mark Attendance
+            </a>
+
+            <a href="{{ url_for('records') }}"
+               class="{% if request.path.startswith('/records') %}active{% endif %}">
+                Attendance Records
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                Logout
+            </a>
         </nav>
     </div>
-    <main class="main-content">
+
+    <main class="main-content" id="main-content">
         {% block content %}{% endblock %}
     </main>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>
