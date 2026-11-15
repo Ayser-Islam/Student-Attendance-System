@@ -1,134 +1,64 @@
-<<<<<<< HEAD
+
 {% extends 'base.html' %}
+
 {% block title %}Dashboard | stuAtt{% endblock %}
+
 {% block content %}
+
 <header>
-=======
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard - AttendEase</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-
-<body>
-
-    <div class="sidebar">
-
-        <h2>AttendEase</h2>
-        <p class="sidebar-subtitle">Teacher Panel</p>
-
-        <nav>
-            <a href="{{ url_for('home') }}" class="active">Dashboard</a>
-            <a href="{{ url_for('students_page') }}">Students</a>
-            <a href="{{ url_for('attendance') }}">Mark Attendance</a>
-            <a href="{{ url_for('records') }}">Attendance Records</a>
-            <a href="{{ url_for('analytics_page') }}">Analytics</a>
-            <a href="{{ url_for('defaulters_page') }}">Defaulter List</a>
-            <a href="{{ url_for('export_attendance') }}">Download CSV Report</a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <p>Logged in as: {{ session.get('user_id') }}</p>
-            <p>Role: Teacher</p>
-            <a href="{{ url_for('logout') }}">Logout</a>
-        </div>
-
+    <div>
+        <h1>Teacher Dashboard</h1>
+        <p>Welcome to the Student Attendance Management System.</p>
     </div>
+</header>
 
-    <main class="main-content">
+<section class="welcome-card">
+    <h2>Manage Attendance Smarter</h2>
+    <p>
+        Manage student information, record daily attendance,
+        analyze attendance performance and generate reports
+        from one place.
+    </p>
+</section>
 
-        <header>
->>>>>>> 0750809 (Update student attendance system)
-            <div>
-                <h1>Teacher Dashboard</h1>
-                <p>Welcome to the Student Attendance Management System.</p>
-            </div>
-        </header>
+<section class="dashboard-cards">
 
-        <section class="welcome-card">
-            <h2>Manage Attendance Smarter</h2>
-            <p>
-<<<<<<< HEAD
-                Keep track of students, record daily attendance
-                and manage attendance records in one place.
-=======
-                Manage student information, record daily attendance,
-                analyze attendance performance and generate reports
-                from one place.
->>>>>>> 0750809 (Update student attendance system)
-            </p>
-        </section>
+    <a href="{{ url_for('students_page') }}" class="dashboard-card">
+        <h3>Students</h3>
+        <p>View, add, update, search and manage student information.</p>
+        <span>Manage Students</span>
+    </a>
 
-        <section class="dashboard-cards">
+    <a href="{{ url_for('attendance') }}" class="dashboard-card">
+        <h3>Mark Attendance</h3>
+        <p>Record daily attendance with Present, Absent and Late status.</p>
+        <span>Mark Attendance</span>
+    </a>
 
-<<<<<<< HEAD
-            <a href="/students" class="dashboard-card">
-                <h3>Students</h3>
-                <p>Manage student information</p>
-            </a>
+    <a href="{{ url_for('records') }}" class="dashboard-card">
+        <h3>Attendance Records</h3>
+        <p>View attendance records by date and update existing records.</p>
+        <span>View Records</span>
+    </a>
 
-            <a href="/attendance" class="dashboard-card">
-                <h3>Mark Attendance</h3>
-                <p>Record daily student attendance</p>
-            </a>
+    <a href="{{ url_for('analytics_page') }}" class="dashboard-card">
+        <h3>Attendance Analytics</h3>
+        <p>Analyze student attendance percentages and attendance counts.</p>
+        <span>View Analytics</span>
+    </a>
 
-            <a href="/records" class="dashboard-card">
-                <h3>Attendance Records</h3>
-                <p>View and update attendance</p>
-            </a>
+    <a href="{{ url_for('defaulters_page') }}" class="dashboard-card">
+        <h3>Defaulter List</h3>
+        <p>Find students whose attendance is below the required percentage.</p>
+        <span>View Defaulters</span>
+    </a>
 
-        </section>
+    <a href="{{ url_for('export_attendance') }}" class="dashboard-card">
+        <h3>Attendance Report</h3>
+        <p>Download attendance records in CSV format.</p>
+        <span>Download Report</span>
+    </a>
+
+</section>
+
 {% endblock %}
-=======
-            <div class="dashboard-card">
-                <h3>Students</h3>
-                <p>View, add, update, search and manage student information.</p>
-                <a href="{{ url_for('students_page') }}">Manage Students</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Mark Attendance</h3>
-                <p>Record daily attendance with Present, Absent and Late status.</p>
-                <a href="{{ url_for('attendance') }}">Mark Attendance</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Attendance Records</h3>
-                <p>View attendance records by date and update existing records.</p>
-                <a href="{{ url_for('records') }}">View Records</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Attendance Analytics</h3>
-                <p>Analyze student attendance percentages and attendance counts.</p>
-                <a href="{{ url_for('analytics_page') }}">View Analytics</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Defaulter List</h3>
-                <p>Find students whose attendance is below the required percentage.</p>
-                <a href="{{ url_for('defaulters_page') }}">View Defaulters</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Attendance Report</h3>
-                <p>Download attendance records in CSV format.</p>
-                <a href="{{ url_for('export_attendance') }}">Download Report</a>
-            </div>
-
-        </section>
-
-        <footer>
-            <p>AttendEase | Student Attendance Management System</p>
-        </footer>
-
-    </main>
-
-</body>
-</html>
->>>>>>> 0750809 (Update student attendance system)

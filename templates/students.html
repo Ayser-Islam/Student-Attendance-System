@@ -1,352 +1,153 @@
-<<<<<<< HEAD
+
 {% extends 'base.html' %}
+
 {% block title %}Students | stuAtt{% endblock %}
+
 {% block content %}
+
 <header>
-=======
+    <div>
+        <h1>Student Management</h1>
+        <p>Add, search and manage student information.</p>
+    </div>
+</header>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students | AttendEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-
-    <div class="sidebar">
-        <h2>AttendEase</h2>
-        <p class="sidebar-subtitle">Student Management</p>
-        <nav>
-            <a href="/">Dashboard</a>
-            <a href="/students" class="active">Students</a>
-            <a href="/attendance">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students | AttendEase</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-
-<body>
-
-    <div class="sidebar">
-
-        <h2>AttendEase</h2>
-        <p class="sidebar-subtitle">Student Management</p>
-
-        <nav>
-            <a href="{{ url_for('home') }}">Dashboard</a>
-            <a href="{{ url_for('students_page') }}" class="active">Students</a>
-            <a href="{{ url_for('attendance') }}">Mark Attendance</a>
-            <a href="{{ url_for('records') }}">Attendance Records</a>
-            <a href="{{ url_for('analytics_page') }}">Analytics</a>
-            <a href="{{ url_for('defaulters_page') }}">Defaulter List</a>
-            <a href="{{ url_for('export_attendance') }}">Download CSV Report</a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <p>Logged in as: {{ session.get('user_id') }}</p>
-            <p>Role: {{ session.get('role', '')|title }}</p>
-            <a href="{{ url_for('logout') }}">Logout</a>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="message {{ category }}" role="alert">
+            {{ message }}
         </div>
+    {% endfor %}
+{% endwith %}
 
+<section class="form-card">
+    <h2>Add New Student</h2>
+
+    <form method="POST" action="{{ url_for('add_student') }}">
+        <label for="name">Student Name</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter student name"
+            required
+        >
+
+        <label for="roll_number">Roll Number</label>
+        <input
+            type="text"
+            id="roll_number"
+            name="roll_number"
+            placeholder="Enter roll number"
+            required
+        >
+
+        <label for="course">Course</label>
+        <input
+            type="text"
+            id="course"
+            name="course"
+            placeholder="Enter course"
+            required
+        >
+
+        <label for="semester">Semester</label>
+        <input
+            type="number"
+            id="semester"
+            name="semester"
+            min="1"
+            placeholder="Enter semester"
+            required
+        >
+
+        <button type="submit">Add Student</button>
+    </form>
+</section>
+
+<section class="form-card records-card" style="margin-top: 25px;">
+    <h2>Student Directory</h2>
+
+    <form
+        method="GET"
+        action="{{ url_for('students_page') }}"
+        class="filter-form"
+    >
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by name or roll number"
+            value="{{ search }}"
+        >
+
+        <button type="submit">Search</button>
+
+        <a href="{{ url_for('students_page') }}" class="clear-filter">
+            Clear
+        </a>
+    </form>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student[1] }}</td>
+                    <td>{{ student[2] }}</td>
+                    <td>{{ student[3] }}</td>
+                    <td>{{ student[4] }}</td>
+
+                    <td>
+                        <a
+                            class="edit-link"
+                            href="{{ url_for('edit_student', roll_number=student[2]) }}"
+                        >
+                            Edit
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('delete_student', roll_number=student[2]) }}"
+                            style="display:inline;"
+                            onsubmit="return confirmStudentDelete();"
+                        >
+                            <button type="submit" class="delete-button">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-records">
+                        No students found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-
-    <main class="main-content">
-
-        <header>
-            <div>
-                <h1>Student Management</h1>
-                <p>Add, search and manage student information.</p>
-            </div>
-        </header>
-
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endwith %}
-
-
-        <section class="form-card">
-
-            <h2>Add New Student</h2>
-
-            <form method="POST" action="{{ url_for('add_student_route') }}">
-
-                <label for="name">Student Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Enter student name"
-                    required
-                >
-
-                <label for="roll_number">Roll Number</label>
-                <input
-                    type="text"
-                    id="roll_number"
-                    name="roll_number"
-                    placeholder="Enter roll number"
-                    required
-                >
-
-                <label for="course">Course</label>
-                <input
-                    type="text"
-                    id="course"
-                    name="course"
-                    placeholder="Enter course"
-                    required
-                >
-
-                <label for="semester">Semester</label>
-                <input
-                    type="number"
-                    id="semester"
-                    name="semester"
-                    min="1"
-                    placeholder="Enter semester"
-                    required
-                >
-
-                <button type="submit">Add Student</button>
-
-            </form>
-
-        </section>
-
-
-        <section class="form-card records-card" style="margin-top: 25px;">
-
-            <h2>Student Directory</h2>
-
-            <form
-                method="GET"
-                action="{{ url_for('students_page') }}"
-                class="filter-form"
-            >
-
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search by name or roll number"
-                    value="{{ search }}"
-                >
-
-                <button type="submit">Search</button>
-
-                <a href="{{ url_for('students_page') }}" class="clear-filter">
-                    Clear
-                </a>
-
-            </form>
-
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Roll Number</th>
-                            <th>Course</th>
-                            <th>Semester</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for student in students %}
-
-                        <tr>
-
-                            <td>{{ student[1] }}</td>
-                            <td>{{ student[2] }}</td>
-                            <td>{{ student[3] }}</td>
-                            <td>{{ student[4] }}</td>
-
-                            <td>
-
-                                <a
-                                    class="edit-link"
-                                    href="{{ url_for('edit_student', roll_number=student[2]) }}"
-                                >
-                                    Edit
-                                </a>
-
-                                <form
-                                    method="POST"
-                                    action="{{ url_for('delete_student', roll_number=student[2]) }}"
-                                    style="display:inline;"
-                                    onsubmit="return confirm('Are you sure you want to delete this student?');"
-                                >
-
-                                    <button
-                                        type="submit"
-                                        class="delete-button"
-                                    >
-                                        Delete
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
-
-                        {% else %}
-
-                        <tr>
-                            <td colspan="5" class="empty-records">
-                                No students found.
-                            </td>
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-        <footer>
-            <p>AttendEase | Student Attendance Management System</p>
-        </footer>
-
-    </main>
-
-</body>
-</html>
-Mark Attendance</a>
-            <a href="/records">Attendance Records</a>
-            <a href="#">Reports</a>
-        </nav>
-    </div>
-
-    <main class="main-content">
-        <header>
->>>>>>> 0750809 (Update student attendance system)
-            <h1>Student Management</h1>
-            <p>Add, search and manage student information.</p>
-        </header>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endwith %}
-
-        <section class="form-card">
-            <h2>Add New Student</h2>
-
-            <form method="POST" action="/students/add">
-                <label>Student Name</label>
-                <input type="text" name="name" required>
-
-                <label>Roll Number</label>
-                <input type="text" name="roll_number" required>
-
-                <label>Course</label>
-                <input type="text" name="course" required>
-
-                <label>Semester</label>
-                <input type="number" name="semester" min="1" required>
-
-                <button type="submit">Add Student</button>
-            </form>
-        </section>
-
-        <section class="form-card records-card" style="margin-top: 25px;">
-            <h2>Student Directory</h2>
-
-            <form method="GET" action="/students" class="filter-form">
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search by name or roll number"
-                    value="{{ search }}"
-                >
-                <button type="submit">Search</button>
-                <a href="/students" class="clear-filter">Clear</a>
-            </form>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Roll Number</th>
-                            <th>Course</th>
-                            <th>Semester</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for student in students %}
-                        <tr>
-                            <td>{{ student[1] }}</td>
-                            <td>{{ student[2] }}</td>
-                            <td>{{ student[3] }}</td>
-                            <td>{{ student[4] }}</td>
-                            <td>
-                                <a class="edit-link"
-                                   href="{{ url_for('edit_student', roll_number=student[2]) }}">
-                                    Edit
-                                </a>
-
-                                <form method="POST"
-                                      action="{{ url_for('delete_student', roll_number=student[2]) }}"
-                                      style="display:inline;"
-                                      onsubmit="return confirmStudentDelete();">
-
-                                    <button type="submit" class="delete-button">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-
-                        {% else %}
-                        <tr>
-                            <td colspan="5" class="empty-records">
-                                No students found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+</section>
 
 <script>
-        function confirmStudentDelete() {
-            return confirm(
-                "Are you sure you want to delete this student?\n\n" +
-                "Students with attendance records cannot be deleted. " +
-                "Their attendance history will be preserved."
-            );
-        }
-    </script>
+    function confirmStudentDelete() {
+        return confirm(
+            "Are you sure you want to delete this student?\n\n" +
+            "Students with attendance records cannot be deleted. " +
+            "Their attendance history will be preserved."
+        );
+    }
+</script>
+
 {% endblock %}
