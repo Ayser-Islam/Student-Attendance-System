@@ -1,102 +1,120 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create User Account</title>
+{% extends "base.html" %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% block title %}Create User Account - stuAtt{% endblock %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            padding: 30px;
-            margin: 0;
-        }
+{% block head %}
+<style>
+    .create-user-card {
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 14px;
+        border: 1px solid #e9ebf2;
+        box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
+    }
 
-        .container {
-            max-width: 500px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px #ddd;
-        }
+    .create-user-card h2 {
+        margin-bottom: 10px;
+        color: #303958;
+    }
 
-        h2 {
-            text-align: center;
-        }
+    .create-user-card .subtitle {
+        color: #858ca0;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+    .create-user-card form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 
-        input, select {
-            width: 100%;
-            padding: 11px;
-            margin-top: 7px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
+    .create-user-card label {
+        font-weight: 600;
+        font-size: 14px;
+        margin-top: 10px;
+        color: #303958;
+    }
 
-        button, .back {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 15px;
-        }
+    .create-user-card input,
+    .create-user-card select {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #dfe2ec;
+        border-radius: 8px;
+        font-size: 15px;
+        background: white;
+        color: #303958;
+    }
 
-        button:hover, .back:hover {
-            opacity: 0.85;
-        }
+    .create-user-card input:focus,
+    .create-user-card select:focus {
+        outline: none;
+        border-color: #5865d8;
+        box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+    }
 
-        .back {
-            background: #555;
-        }
+    .info-message {
+        background: #e0f2fe;
+        color: #075985;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 5px 0;
+    }
 
-        .message {
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 5px;
-        }
+    .create-button,
+    .back-button {
+        display: block;
+        width: 100%;
+        padding: 13px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+    }
 
-        .success {
-            background: #dcfce7;
-            color: #166534;
-        }
+    .create-button {
+        background: #5865d8;
+        color: white;
+    }
 
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+    .create-button:hover {
+        background: #4552c5;
+    }
 
-        .info {
-            background: #e0f2fe;
-            color: #075985;
-        }
-    </style>
-</head>
+    .back-button {
+        background: #eef0f7;
+        color: #303958;
+    }
 
-<body>
+    .back-button:hover {
+        background: #e1e4ef;
+    }
+</style>
+{% endblock %}
 
-<div class="container">
+{% block content %}
 
-    <h2>Create User Account</h2>
+<header>
+    <h1>Create User Account</h1>
+    <p>Create Teacher and Student accounts from the Admin Dashboard.</p>
+</header>
+
+<div class="create-user-card">
+
+    <h2>New Account</h2>
+
+    <p class="subtitle">
+        Enter the account details below.
+    </p>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
@@ -118,8 +136,10 @@
             required
         >
 
-        <p class="message info">
-            For Student accounts, enter the student's existing Roll Number as the Login ID.
+        <p class="info-message">
+            For Student accounts, enter the student's existing Roll Number
+            as the Login ID. The system will automatically link the account
+            to the matching student record.
         </p>
 
         <label for="password">Password</label>
@@ -141,15 +161,16 @@
             <option value="student">Student</option>
         </select>
 
-        <button type="submit">Create Account</button>
+        <button type="submit" class="create-button">
+            Create Account
+        </button>
 
     </form>
 
-    <a href="{{ url_for('admin_dashboard') }}" class="back">
+    <a href="{{ url_for('admin_dashboard') }}" class="back-button">
         Back to Admin Dashboard
     </a>
 
 </div>
 
-</body>
-</html>
+{% endblock %}

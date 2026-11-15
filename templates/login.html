@@ -1,160 +1,168 @@
 
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Login - stuAtt{% endblock %}
 
-    <title>Login - Student Attendance System</title>
+{% block head %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    .sidebar {
+        display: none;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 15px;
-        }
+    .main-content {
+        flex: none;
+        width: 100%;
+        max-width: 430px;
+        padding: 0;
+    }
 
+    .login-box {
+        background: white;
+        padding: 35px;
+        width: 100%;
+        border-radius: 15px;
+        border: 1px solid #e9ebf2;
+        box-shadow: 0 8px 25px rgba(30, 40, 80, 0.08);
+    }
+
+    .login-box h2 {
+        text-align: center;
+        color: #20243a;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #858ca0;
+        margin-bottom: 25px;
+    }
+
+    .login-box label {
+        display: block;
+        margin-top: 18px;
+        font-weight: 600;
+        color: #303958;
+        font-size: 14px;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 13px;
+        margin-top: 8px;
+        border: 1px solid #dfe2ec;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .login-box input:focus {
+        outline: none;
+        border-color: #5865d8;
+        box-shadow: 0 0 0 3px rgba(88, 101, 216, 0.12);
+    }
+
+    .login-box button {
+        width: 100%;
+        padding: 14px;
+        background: #5865d8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 25px;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .login-box button:hover {
+        background: #4552c5;
+    }
+
+    .login-box .message {
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    .login-box .message.success {
+        background: #e5f6eb;
+        color: #21683b;
+    }
+
+    .login-box .message.error {
+        background: #fdeaea;
+        color: #a52d2d;
+    }
+
+    @media (max-width: 450px) {
         .login-box {
-            background: white;
-            padding: 35px;
-            width: 100%;
-            max-width: 380px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px #0002;
+            padding: 25px;
         }
+    }
+</style>
+{% endblock %}
 
-        h2 {
-            text-align: center;
-            color: #1e293b;
-        }
+{% block content %}
 
-        .subtitle {
-            text-align: center;
-            color: #64748b;
-        }
+<div class="login-box">
 
-        label {
-            display: block;
-            margin-top: 18px;
-            font-weight: bold;
-            color: #334155;
-        }
+    <h2>stuAtt</h2>
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-        }
+    <p class="subtitle">
+        Student Management System
+    </p>
 
-        input:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
+    <p class="subtitle">
+        Login to continue
+    </p>
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 22px;
-            font-size: 15px;
-        }
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
 
-        button:hover {
-            background: #1d4ed8;
-        }
+    <form method="POST" action="{{ url_for('login') }}">
 
-        .message {
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            margin-top: 12px;
-        }
+        <label for="user_id">Login ID</label>
 
-        .success {
-            background: #dcfce7;
-            color: #166534;
-        }
+        <input
+            type="text"
+            id="user_id"
+            name="user_id"
+            placeholder="Enter your Login ID"
+            autocomplete="username"
+            required
+        >
 
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+        <label for="password">Password</label>
 
-        @media (max-width: 400px) {
-            .login-box {
-                padding: 25px;
-            }
-        }
-    </style>
-</head>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your Password"
+            autocomplete="current-password"
+            required
+        >
 
-<body>
+        <button type="submit">
+            Login
+        </button>
 
-    <div class="login-box">
+    </form>
 
-        <h2>Student Attendance System</h2>
+</div>
 
-        <p class="subtitle">
-            Login to continue
-        </p>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endwith %}
-
-        <form method="POST" action="{{ url_for('login') }}">
-
-            <label for="user_id">Login ID</label>
-
-            <input
-                type="text"
-                id="user_id"
-                name="user_id"
-                placeholder="Enter your Login ID"
-                autocomplete="username"
-                required
-            >
-
-            <label for="password">Password</label>
-
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your Password"
-                autocomplete="current-password"
-                required
-            >
-
-            <button type="submit">
-                Login
-            </button>
-
-        </form>
-
-    </div>
-
-</body>
-
-</html>
+{% endblock %}

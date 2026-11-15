@@ -1,31 +1,204 @@
 
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Attendance Summary</title>
-</head>
-<body>
+{% block title %}Student Attendance Summary - stuAtt{% endblock %}
 
-<h1>Student Attendance Summary</h1>
+{% block head %}
+<style>
+    .student-analytics {
+        max-width: 900px;
+    }
 
-<h3>Name: {{ student.name }}</h3>
-<h3>Roll Number: {{ student.roll_number }}</h3>
-<h3>Course: {{ student.course }}</h3>
-<h3>Semester: {{ student.semester }}</h3>
+    .student-info-card,
+    .attendance-summary-card {
+        background: white;
+        padding: 25px;
+        border-radius: 14px;
+        border: 1px solid #e9ebf2;
+        box-shadow: 0 4px 15px rgba(30, 40, 80, 0.05);
+        margin-top: 22px;
+    }
 
-<hr>
+    .student-info-card h2,
+    .attendance-summary-card h2 {
+        color: #303958;
+        margin-bottom: 20px;
+    }
 
-<h2>Attendance Statistics</h2>
+    .student-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
 
-<p>Total Classes: {{ student.total }}</p>
-<p>Present: {{ student.present }}</p>
-<p>Absent: {{ student.absent }}</p>
-<p>Late: {{ student.late }}</p>
+    .detail-item {
+        padding: 15px;
+        background: #f5f6fb;
+        border-radius: 9px;
+    }
 
-<h2>Attendance Percentage: {{ student.percentage }}%</h2>
+    .detail-item span {
+        display: block;
+        color: #858ca0;
+        font-size: 13px;
+        margin-bottom: 7px;
+    }
 
-<a href="{{ url_for('analytics_page') }}">Back to Analytics</a>
+    .detail-item strong {
+        color: #303958;
+        font-size: 16px;
+    }
 
-</body>
-</html>
+    .attendance-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 20px;
+        background: #f5f6fb;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .stat-card p {
+        color: #858ca0;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+        color: #303958;
+        font-size: 25px;
+    }
+
+    .percentage-card {
+        margin-top: 20px;
+        padding: 22px;
+        background: #5865d8;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+    }
+
+    .percentage-card p {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .percentage-card h2 {
+        color: white;
+        font-size: 32px;
+        margin: 0;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 22px;
+        padding: 12px 18px;
+        background: #eef0f7;
+        color: #303958;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .back-link:hover {
+        background: #e1e4ef;
+    }
+
+    @media (max-width: 550px) {
+        .student-details {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="student-analytics">
+
+    <header>
+        <div>
+            <h1>Student Attendance Summary</h1>
+            <p>Individual student information and attendance performance.</p>
+        </div>
+    </header>
+
+    <!-- Student Information -->
+    <section class="student-info-card">
+
+        <h2>Student Information</h2>
+
+        <div class="student-details">
+
+            <div class="detail-item">
+                <span>Student Name</span>
+                <strong>{{ student.name }}</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Roll Number</span>
+                <strong>{{ student.roll_number }}</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Course</span>
+                <strong>{{ student.course }}</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Semester</span>
+                <strong>{{ student.semester }}</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Attendance Statistics -->
+    <section class="attendance-summary-card">
+
+        <h2>Attendance Statistics</h2>
+
+        <div class="attendance-stats">
+
+            <div class="stat-card">
+                <p>Total Classes</p>
+                <h3>{{ student.total }}</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Present</p>
+                <h3>{{ student.present }}</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Absent</p>
+                <h3>{{ student.absent }}</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Late</p>
+                <h3>{{ student.late }}</h3>
+            </div>
+
+        </div>
+
+        <div class="percentage-card">
+            <p>Attendance Percentage</p>
+            <h2>{{ student.percentage }}%</h2>
+        </div>
+
+    </section>
+
+    <a href="{{ url_for('analytics_page') }}" class="back-link">
+        Back to Analytics
+    </a>
+
+</div>
+
+{% endblock %}

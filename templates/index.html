@@ -1,18 +1,20 @@
 
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Dashboard | stuAtt{% endblock %}
+{% block title %}Teacher Dashboard - stuAtt{% endblock %}
 
 {% block content %}
+
 <header>
     <div>
         <h1>Teacher Dashboard</h1>
-        <p>Welcome to the Student Attendance Management System.</p>
+        <p>Welcome to the stuAtt Student Management System.</p>
     </div>
 </header>
 
 <section class="welcome-card">
     <h2>Manage Attendance Smarter</h2>
+
     <p>
         Manage student information, record daily attendance,
         analyze attendance performance and generate reports
@@ -24,33 +26,46 @@
 
     <a href="{{ url_for('students_page') }}" class="dashboard-card">
         <h3>Students</h3>
-        <p>View, add, update, search and manage student information.</p>
+        <p>
+            View, add, update, search and manage student information.
+        </p>
     </a>
 
     <a href="{{ url_for('attendance') }}" class="dashboard-card">
         <h3>Mark Attendance</h3>
-        <p>Record daily attendance with Present, Absent and Late status.</p>
+        <p>
+            Record daily attendance with Present, Absent and Late status.
+        </p>
     </a>
 
     <a href="{{ url_for('records') }}" class="dashboard-card">
         <h3>Attendance Records</h3>
-        <p>View attendance records by date and update existing records.</p>
+        <p>
+            View attendance records by date and update existing records.
+        </p>
     </a>
 
     <a href="{{ url_for('analytics_page') }}" class="dashboard-card">
         <h3>Attendance Analytics</h3>
-        <p>Analyze student attendance percentages and attendance counts.</p>
+        <p>
+            Analyze student attendance percentages and attendance counts.
+        </p>
     </a>
 
     <a href="{{ url_for('defaulters_page') }}" class="dashboard-card">
         <h3>Defaulter List</h3>
-        <p>Find students whose attendance is below the required percentage.</p>
+        <p>
+            Find students whose attendance is below the required percentage.
+        </p>
     </a>
 
     <a href="{{ url_for('export_attendance') }}" class="dashboard-card">
         <h3>Attendance Report</h3>
-        <p>Download attendance records in CSV format.</p>
+        <p>
+            Download attendance records in CSV format.
+        </p>
     </a>
 
 </section>
+
 {% endblock %}
