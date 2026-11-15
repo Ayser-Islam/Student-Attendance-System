@@ -1,29 +1,7 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Attendance | AttendEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-
-    <div class="sidebar">
-        <h2>AttendEase</h2>
-        <p class="sidebar-subtitle">Student Management</p>
-
-        <nav>
-            <a href="/">Dashboard</a>
-            <a href="#">Students</a>
-            <a href="/attendance">Mark Attendance</a>
-            <a href="/records" class="active">Attendance Records</a>
-            <a href="#">Reports</a>
-        </nav>
-    </div>
-
-    <main class="main-content">
-        <header>
+{% extends 'base.html' %}
+{% block title %}Edit Attendance | stuAtt{% endblock %}
+{% block content %}
+<header>
             <h1>Edit Attendance</h1>
             <p>Correct an existing attendance record.</p>
         </header>
@@ -59,7 +37,4 @@
                 <a href="/records" class="clear-filter">Cancel</a>
             </form>
         </section>
-    </main>
-
-</body>
-</html>
+{% endblock %}
