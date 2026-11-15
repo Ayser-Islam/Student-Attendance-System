@@ -6,6 +6,7 @@ import getpass
 
 
 def reset_password():
+<<<<<<< Updated upstream
     print("\n===== Reset Password =====")
     print("1. Teacher")
     print("2. Admin")
@@ -35,6 +36,8 @@ def reset_password():
     if password != confirm_password:
         print("Passwords do not match!")
         return
+=======
+>>>>>>> Stashed changes
 
     init_auth_table()
 
@@ -42,18 +45,69 @@ def reset_password():
 
     try:
         cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT user_id, role
+            FROM auth_users
+            WHERE role IN ('teacher', 'student')
+            ORDER BY role, user_id
+        """)
+
+        users = cursor.fetchall()
+
+        if not users:
+            print("No Teacher or Student accounts found!")
+            return
+
+        print("\nTeacher and Student Accounts:")
+
+        for user in users:
+            print(f"Login ID: {user[0]} | Role: {user[1].capitalize()}")
+
+        user_id = input("\nEnter Teacher/Student Login ID: ").strip()
+
+        cursor.execute("""
+            SELECT user_id, role
+            FROM auth_users
+            WHERE user_id = ?
+            AND role IN ('teacher', 'student')
+        """, (user_id,))
+
+        user = cursor.fetchone()
+
+        if not user:
+            print("Invalid Login ID! Admin accounts cannot be changed.")
+            return
+
+        password = getpass.getpass("Enter new password: ")
+        confirm_password = getpass.getpass("Confirm new password: ")
+
+        if len(password) < 8:
+            print("Password must contain at least 8 characters.")
+            return
+
+        if password != confirm_password:
+            print("Passwords do not match!")
+            return
+
         password_hash = generate_password_hash(password)
 
         cursor.execute("""
-            INSERT INTO auth_users (user_id, password_hash)
-            VALUES (?, ?)
-            ON CONFLICT(user_id)
-            DO UPDATE SET password_hash = excluded.password_hash
-        """, (user_id, password_hash))
+            UPDATE auth_users
+            SET password_hash = ?
+            WHERE user_id = ?
+            AND role IN ('teacher', 'student')
+        """, (password_hash, user_id))
 
         conn.commit()
 
+<<<<<<< Updated upstream
         print(f"{user_id.capitalize()} account password reset successfully!")
+=======
+        print(
+            f"\n{user[1].capitalize()} password reset successfully!"
+        )
+>>>>>>> Stashed changes
 
     except Exception as e:
         conn.rollback()

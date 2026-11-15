@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User Account</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 30px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #ddd;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button, .back {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover, .back:hover {
+            opacity: 0.85;
+        }
+
+        .back {
+            background: #555;
+        }
+
+        .message {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .info {
+            background: #e0f2fe;
+            color: #075985;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Create User Account</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <label for="user_id">Login ID</label>
+
+        <input
+            type="text"
+            id="user_id"
+            name="user_id"
+            placeholder="Enter Login ID"
+            required
+        >
+
+        <p class="message info">
+            For Student accounts, enter the student's existing Roll Number as the Login ID.
+        </p>
+
+        <label for="password">Password</label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Minimum 8 characters"
+            minlength="8"
+            required
+        >
+
+        <label for="role">Select Role</label>
+
+        <select id="role" name="role" required>
+            <option value="">Choose Role</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+        </select>
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back">
+        Back to Admin Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>
