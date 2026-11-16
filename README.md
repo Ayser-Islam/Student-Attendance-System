@@ -115,10 +115,10 @@ Student-Attendance-System/
 
 The `templates/` directory contains the HTML and Jinja2 pages used by the application. The `static/` directory contains CSS styling and other static assets. Python modules contain the application routes and student, attendance, database, authentication and analytics logic.
 
+
 ## 7. Installation and Execution
 
 ### Prerequisites
-
 - Python installed on your computer.
 - Git installed on your computer.
 
@@ -147,8 +147,6 @@ py -m venv .venv
 py -m pip install flask
 ```
 
-Install any other external Python packages required by the application if applicable.
-
 ### Step 5: Configure the Secret Key
 
 The application requires the `SECRET_KEY` environment variable.
@@ -161,18 +159,63 @@ $env:SECRET_KEY = "your-own-long-random-secret-key"
 
 Do not publish or commit your actual secret key.
 
-### Step 6: Run the Application
+### Step 6: Initial Admin Account Setup
+
+Before accessing the application for the first time, create an administrator account.
+
+Run the setup script:
+
+```powershell
+py setup_users.py
+```
+
+The script will prompt you for:
+
+- Admin Login ID
+- Admin Password
+- Confirm Admin Password
+
+**Password requirements:**
+- Minimum 8 characters.
+- Both password entries must match.
+
+The password is entered securely and is not displayed in the terminal.
+
+After successful creation, you will see:
+
+```text
+Admin account setup completed!
+You can now log in to the Flask application.
+```
+
+If an admin account already exists, the script displays its Login ID instead of creating another account.
+
+### Step 7: Run the Application
 
 ```powershell
 py app.py
 ```
 
-Open the local URL displayed in the terminal in your web browser.
+Open the local URL displayed in the terminal in your browser.
 
-**Note:** The environment variable applies only to the current PowerShell session. Set it again when opening a new terminal.
+### Step 8: Login to the Application
+
+1. Navigate to the login page.
+2. Select the appropriate user role.
+3. Enter your Login ID and Password.
+4. Click Login.
+
+After successful admin login, access the Admin Dashboard to:
+
+- Create teacher and student accounts.
+- Manage existing user accounts.
+- Perform administrative operations.
+
+**Important:** Keep your admin credentials private. The `SECRET_KEY` environment variable applies only to the current PowerShell session. Set it again when opening a new terminal.
 
 
-## 8. Screenshots
+
+## 9. Screenshots
 <img width="624" height="287" alt="Picture1" src="https://github.com/user-attachments/assets/5e44bb15-d1bd-4c70-b585-bf3e6ae39f8e" />
 <img width="626" height="198" alt="Picture2" src="https://github.com/user-attachments/assets/f904b467-5b0d-48f8-b213-1b7968d5faff" />
 <img width="829" height="506" alt="Picture3" src="https://github.com/user-attachments/assets/f92b6d03-f3ed-422c-a6a2-bd6552da3df5" />
