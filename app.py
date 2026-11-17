@@ -1,4 +1,4 @@
-
+from leaves import init_leaves_table, apply_leave, get_student_leaves, get_all_leaves, update_leave_status
 from flask import (
     Flask,
     render_template,
@@ -68,7 +68,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 initialize_database()
 init_auth_table()
-
+init_leaves_table()
 
 # ==========================================
 # CHECK ACTIVE USER SESSION
@@ -959,7 +959,41 @@ def forbidden(error):
         403
     )
 
+# ====================================
+# LEAVE MANAGEMENT ROUTES
+# ====================================
 
+@app.route("/leaves", methods=["GET", "POST"])
+@login_required
+def leaves():
+    role = session.get("role")
+    student_id = session.get("student_id")
+
+    if request.method == "POST" and role == "student":
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+        reason = request.form.get("reason", "")
+
+        success, message = apply_leave(student_id, start_date, end_date, reason)
+        flash(message, "success" if success else "danger")
+        return redirect(url_for("leaves"))
+
+    if role == "student":
+        leave_records = get_student_leaves(student_id)
+    else:
+        leave_records = get_all_leaves()
+
+    return render_template("leaves.html", leaves=leave_records, role=role)
+
+
+@app.route("/leaves/action/<int:leave_id>/<action>")
+@login_required
+@role_required("admin", "teacher")
+def leave_action(leave_id, action):
+    success, message = update_leave_status(leave_id, action)
+    flash(message, "success" if success else "danger")
+    return redirect(url_for("leaves"))
+        
 # ==========================================
 # RUN APPLICATION
 # ==========================================
