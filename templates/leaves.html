@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Management - stuAtt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .container { max-width: 900px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .badge-pending { color: #d97706; font-weight: bold; }
+        .badge-approved { color: #16a34a; font-weight: bold; }
+        .badge-rejected { color: #dc2626; font-weight: bold; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; color: #fff; }
+        .btn-approve { background: #16a34a; }
+        .btn-reject { background: #dc2626; }
+        .btn-submit { background: #2563eb; padding: 10px 16px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Leave Management</h2>
+    <p><a href="{{ url_for('dashboard') }}">← Back to Dashboard</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p style="color: green; font-weight: bold;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if role == 'student' %}
+    <h3>Apply for Leave</h3>
+    <form method="POST" action="{{ url_for('leaves') }}">
+        <div class="form-group">
+            <label>Start Date:</label>
+            <input type="date" name="start_date" required>
+        </div>
+        <div class="form-group">
+            <label>End Date:</label>
+            <input type="date" name="end_date" required>
+        </div>
+        <div class="form-group">
+            <label>Reason:</label>
+            <textarea name="reason" rows="3" placeholder="Enter reason for leave..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-submit">Submit Leave Request</button>
+    </form>
+
+    <h3>My Leave History</h3>
+    <table>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Applied On</th>
+        </tr>
+        {% for leave in leaves %}
+        <tr>
+            <td>{{ leave[1] }}</td>
+            <td>{{ leave[2] }}</td>
+            <td>{{ leave[3] }}</td>
+            <td class="badge-{{ leave[4]|lower }}">{{ leave[4] }}</td>
+            <td>{{ leave[5] }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No leave requests found.</td></tr>
+        {% endfor %}
+    </table>
+
+    {% else %}
+    <h3>All Student Leave Requests</h3>
+    <table>
+        <tr>
+            <th>Student</th>
+            <th>Roll No</th>
+            <th>Dates</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for leave in leaves %}
+        <tr>
+            <td>{{ leave[1] }} ({{ leave[3] }})</td>
+            <td>{{ leave[2] }}</td>
+            <td>{{ leave[4] }} to {{ leave[5] }}</td>
+            <td>{{ leave[6] }}</td>
+            <td class="badge-{{ leave[7]|lower }}">{{ leave[7] }}</td>
+            <td>
+                {% if leave[7] == 'Pending' %}
+                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Approved') }}" class="btn btn-approve">Approve</a>
+                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Rejected') }}" class="btn btn-reject">Reject</a>
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">No leave requests available.</td></tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+</body>
+</html>
