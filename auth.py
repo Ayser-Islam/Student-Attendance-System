@@ -78,8 +78,8 @@ def create_auth_user(user_id, password, role, student_id=None):
     if role not in ("admin", "teacher", "student"):
         return False, "Invalid user role."
 
-    if role == "student" and student_id is None:
-        return False, "Student record is required."
+    ##if role == "student" and student_id is None:
+     ##   return False, "Student record is required."
 
     if role != "student" and student_id is not None:
         return False, "Only student accounts can have a student record."
@@ -89,23 +89,23 @@ def create_auth_user(user_id, password, role, student_id=None):
     try:
         cursor = conn.cursor()
 
-        if role == "student":
+       ## if role == "student":
 
-            cursor.execute(
-                "SELECT student_id FROM students WHERE student_id = ?",
-                (student_id,)
-            )
+            ##cursor.execute(
+              ##  "SELECT student_id FROM students WHERE student_id = ?",
+                ##(student_id,)
+            ##)
 
-            if cursor.fetchone() is None:
-                return False, "Student record does not exist."
+            ##if cursor.fetchone() is None:
+              ##  return False, "Student record does not exist."
 
-            cursor.execute("""
-                SELECT user_id FROM auth_users
-                WHERE student_id = ?
-            """, (student_id,))
+           ## cursor.execute("""
+             ##   SELECT user_id FROM auth_users
+               ## WHERE student_id = ?
+            ##""", (student_id,))
 
-            if cursor.fetchone():
-                return False, "This student already has an account."
+            ##if cursor.fetchone():
+               ## return False, "This student already has an account."
 
         password_hash = generate_password_hash(password)
 

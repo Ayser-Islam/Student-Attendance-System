@@ -291,37 +291,37 @@ def create_user():
 
         student_id = None
 
-        if role == "student":
+       ## if role == "student":
 
-            roll_number = request.form.get(
-                "roll_number", ""
-            ).strip()
+         ##   roll_number = request.form.get(
+           ##     "roll_number", ""
+           ## ).strip()
 
-            conn = get_connection()
-            cursor = conn.cursor()
+          ##  conn = get_connection()
+           ## cursor = conn.cursor()
 
-            cursor.execute("""
-                SELECT student_id
-                FROM students
-                WHERE roll_number = ?
-            """, (roll_number,))
+         ##   cursor.execute("""
+           ##     SELECT student_id
+           ##     FROM students
+    ##            WHERE roll_number = ?
+    ##        """, (roll_number,))
 
-            student = cursor.fetchone()
-            conn.close()
+      ##      student = cursor.fetchone()
+    ##        conn.close()
 
-            if not student:
+      ##      if not student:
 
-                flash(
-                    "Please select a valid student.",
-                    "error"
-                )
+    ##            flash(
+     ##               "Please select a valid student.",
+    ##                "error"
+         ##       )
 
-                return render_template(
-                    "create_staff.html",
-                    students=students
-                )
-
-            student_id = student[0]
+    ##            return render_template(
+      ##              "create_staff.html",
+     ##               students=students
+     ##           )
+##
+  ##          student_id = student[0]
 
         if role not in ("teacher", "student"):
 

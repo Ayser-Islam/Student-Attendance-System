@@ -28,6 +28,10 @@
                class="{% if request.path == '/attendance' %}active{% endif %}">
                 Mark Attendance
             </a>
+            <a href="{{ url_for('leaves') }}"
+           class="{% if request.path.startswith('/leaves') %}active{% endif %}">
+            Leaves
+            </a>
 
             <a href="{{ url_for('records') }}"
                class="{% if request.path.startswith('/records') %}active{% endif %}">

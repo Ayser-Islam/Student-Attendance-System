@@ -1,110 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Leave Management - stuAtt</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .container { max-width: 900px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .badge-pending { color: #d97706; font-weight: bold; }
-        .badge-approved { color: #16a34a; font-weight: bold; }
-        .badge-rejected { color: #dc2626; font-weight: bold; }
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; color: #fff; }
-        .btn-approve { background: #16a34a; }
-        .btn-reject { background: #dc2626; }
-        .btn-submit { background: #2563eb; padding: 10px 16px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h2>Leave Management</h2>
-    <p><a href="{{ url_for('dashboard') }}">← Back to Dashboard</a></p>
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Blue Header Banner -->
+    <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; padding: 24px 28px; border-radius: 12px; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);">
+        <h2 style="margin: 0; font-size: 24px; color: #fff;">Leave Management System</h2>
+        <p style="margin: 8px 0 0 0; font-size: 14px; color: #e0e7ff;">Manage, apply, and track student leave applications</p>
+    </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <p style="color: green; font-weight: bold;">{{ message }}</p>
+          <div style="padding: 14px 18px; border-radius: 8px; background: #dcfce7; color: #166534; font-weight: bold; border-left: 5px solid #16a34a;">
+            {{ message }}
+          </div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
     {% if role == 'student' %}
-    <h3>Apply for Leave</h3>
-    <form method="POST" action="{{ url_for('leaves') }}">
-        <div class="form-group">
-            <label>Start Date:</label>
-            <input type="date" name="start_date" required>
-        </div>
-        <div class="form-group">
-            <label>End Date:</label>
-            <input type="date" name="end_date" required>
-        </div>
-        <div class="form-group">
-            <label>Reason:</label>
-            <textarea name="reason" rows="3" placeholder="Enter reason for leave..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-submit">Submit Leave Request</button>
-    </form>
+    <!-- Student Apply Card -->
+    <div style="padding: 26px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: #1e3a8a; font-size: 19px;">Apply for Leave</h3>
+        <form method="POST" action="{{ url_for('leaves') }}" style="display: flex; flex-direction: column; gap: 18px;">
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">Start Date:</label>
+                <input type="date" name="start_date" required style="width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">End Date:</label>
+                <input type="date" name="end_date" required style="width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">Reason for Leave:</label>
+                <textarea name="reason" rows="3" placeholder="Enter your reason here..." required style="width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px;"></textarea>
+            </div>
+            <div>
+                <button type="submit" style="background: #2563eb; color: #fff; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px;">Submit Leave Request</button>
+            </div>
+        </form>
+    </div>
 
-    <h3>My Leave History</h3>
-    <table>
-        <tr>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Reason</th>
-            <th>Status</th>
-            <th>Applied On</th>
-        </tr>
+    <!-- Student History Card -->
+    <div style="padding: 26px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e3a8a; font-size: 19px;">My Leave History</h3>
+        
+        <!-- Separate Blue Boxes Row -->
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px;">
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Start Date</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">End Date</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Reason</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Status</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Applied On</div>
+        </div>
+
         {% for leave in leaves %}
-        <tr>
-            <td>{{ leave[1] }}</td>
-            <td>{{ leave[2] }}</td>
-            <td>{{ leave[3] }}</td>
-            <td class="badge-{{ leave[4]|lower }}">{{ leave[4] }}</td>
-            <td>{{ leave[5] }}</td>
-        </tr>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 10px;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[0] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[1] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[2] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; color: {% if leave[3] == 'Approved' %}#16a34a{% elif leave[3] == 'Rejected' %}#dc2626{% else %}#d97706{% endif %};">{{ leave[3] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[4] }}</div>
+        </div>
         {% else %}
-        <tr><td colspan="5">No leave requests found.</td></tr>
+        <div style="padding: 20px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">No leave requests found.</div>
         {% endfor %}
-    </table>
+    </div>
 
     {% else %}
-    <h3>All Student Leave Requests</h3>
-    <table>
-        <tr>
-            <th>Student</th>
-            <th>Roll No</th>
-            <th>Dates</th>
-            <th>Reason</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
+    <!-- Admin / Teacher Requests Card -->
+    <div style="padding: 26px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e3a8a; font-size: 19px;">All Student Leave Requests</h3>
+        
+        <!-- Separate Blue Boxes Row -->
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 14px;">
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Student</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Roll No</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Dates</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Reason</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Status</div>
+            <div style="background: #2563eb; color: #fff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Action</div>
+        </div>
+
         {% for leave in leaves %}
-        <tr>
-            <td>{{ leave[1] }} ({{ leave[3] }})</td>
-            <td>{{ leave[2] }}</td>
-            <td>{{ leave[4] }} to {{ leave[5] }}</td>
-            <td>{{ leave[6] }}</td>
-            <td class="badge-{{ leave[7]|lower }}">{{ leave[7] }}</td>
-            <td>
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 10px; align-items: center;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 500;">{{ leave[1] }} ({{ leave[2] }})</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[3] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[4] }} to {{ leave[5] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">{{ leave[6] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; color: {% if leave[7] == 'Approved' %}#16a34a{% elif leave[7] == 'Rejected' %}#dc2626{% else %}#d97706{% endif %};">{{ leave[7] }}</div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center;">
                 {% if leave[7] == 'Pending' %}
-                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Approved') }}" class="btn btn-approve">Approve</a>
-                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Rejected') }}" class="btn btn-reject">Reject</a>
+                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Approved') }}" style="background: #16a34a; color: #fff; padding: 6px 10px; border-radius: 6px; text-decoration: none; margin-right: 4px; font-size: 12px; display: inline-block;">Approve</a>
+                <a href="{{ url_for('leave_action', leave_id=leave[0], action='Rejected') }}" style="background: #dc2626; color: #fff; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-size: 12px; display: inline-block;">Reject</a>
                 {% else %}
                 -
                 {% endif %}
-            </td>
-        </tr>
+            </div>
+        </div>
         {% else %}
-        <tr><td colspan="6">No leave requests available.</td></tr>
+        <div style="padding: 20px; text-align: center; color: #64748b; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">No leave requests available.</div>
         {% endfor %}
-    </table>
+    </div>
     {% endif %}
+
 </div>
-</body>
-</html>
+{% endblock %}

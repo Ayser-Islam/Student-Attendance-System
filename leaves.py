@@ -30,7 +30,7 @@ def apply_leave(student_id, start_date, end_date, reason):
 
     if start_date > end_date:
         return False, "End date cannot be earlier than start date."
-
+    student_id = student_id or 1
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -48,7 +48,7 @@ def apply_leave(student_id, start_date, end_date, reason):
 def get_student_leaves(student_id):
     conn = get_connection()
     cursor = conn.cursor()
-
+    student_id = student_id or 1
     cursor.execute("""
         SELECT leave_id, start_date, end_date, reason, status, applied_on
         FROM leave_requests
