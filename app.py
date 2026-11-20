@@ -69,6 +69,25 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 initialize_database()
 init_auth_table()
 init_leaves_table()
+admin_id = os.environ.get("ADMIN_USER_ID")
+admin_password = os.environ.get("ADMIN_PASSWORD")
+
+if admin_id and admin_password:
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT 1 FROM auth_users WHERE role = 'admin' LIMIT 1"
+    )
+    exists = cursor.fetchone()
+    conn.close()
+
+    if not exists:
+        success, message = create_auth_user(
+            admin_id,
+            admin_password,
+            "admin"
+        )
+        print(message)
 
 # ==========================================
 # CHECK ACTIVE USER SESSION
